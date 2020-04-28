@@ -24,15 +24,20 @@ export default class WalkAreaComponent extends Component {
     playerContainer.style.left = `${clickXPosition}px`;
     playerContainer.style.transition = `${timeToWalk}ms linear`;
 
+    let direction;
 
     if((playerPositionXDiff > 0) && ((Math.abs(playerPositionXDiff)) > (Math.abs(playerPositionYDiff)))) {
-      playerSprite.className = 'walk-right';
+      playerSprite.className = 'walk right';
+      direction = 'right';
     } else if ((playerPositionYDiff > 0 ) && ((Math.abs(playerPositionXDiff)) < (Math.abs(playerPositionYDiff)))) {
-      playerSprite.className = 'walk-down';
+      playerSprite.className = 'walk down';
+      direction = 'down';
     } else if ((playerPositionYDiff < 0 ) && ((Math.abs(playerPositionXDiff)) < (Math.abs(playerPositionYDiff)))) {
-      playerSprite.className = 'walk-up';
+      playerSprite.className = 'walk up';
+      direction = 'up';
     } else if ((playerPositionXDiff < 0) && ((Math.abs(playerPositionXDiff)) > (Math.abs(playerPositionYDiff)))) {
-      playerSprite.className = 'walk-left';
+      playerSprite.className = 'walk left';
+      direction = 'left';
     }
 
     if(this.walkAnimationInProgress) {
@@ -40,7 +45,7 @@ export default class WalkAreaComponent extends Component {
     }
 
     this.animationTimeout = later(() => {
-      playerSprite.className = 'standing';
+      playerSprite.className = `standing ${direction}`;
       this.walkAnimationInProgress = false;
     }, timeToWalk);
 

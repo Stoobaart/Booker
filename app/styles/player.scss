@@ -13,29 +13,55 @@
   position: relative;
   top: -1px;
   left: -7px;
-  width: 560px;
-  height: 384px;
+  width: 1995px;
+  height: 306px;
   image-rendering: pixelated;
   filter: blur(0);
   -webkit-filter: blur(0);
 
   &.standing {
     background: url("/assets/character-sprites/dick.png");
-  }
 
-  &.walk-right {
-    background: url("/assets/character-sprites/dick.png");
-  }
+    &.right {
+      background: url("/assets/character-sprites/dick-right.png");
+    }
+    
+    &.down {
+      background: url("/assets/character-sprites/dick-down.png");
+    }
   
-  &.walk-down {
-    background: url("/assets/character-sprites/dick.png");
+    &.up {
+      background: url("/assets/character-sprites/dick-up.png");
+    }
+  
+    &.left {
+      background: url("/assets/character-sprites/dick-left.png");
+    }
   }
 
-  &.walk-up {
-    background: url("/assets/character-sprites/dick.png");
+  &.walk {
+    animation: walk 1000ms steps(13) infinite;
+
+    &.right {
+      background: url("/assets/character-sprites/dick-right.png");
+    }
+    
+    &.down {
+      background: url("/assets/character-sprites/dick-down.png");
+    }
+  
+    &.up {
+      background: url("/assets/character-sprites/dick-up.png");
+    }
+  
+    &.left {
+      background: url("/assets/character-sprites/dick-left.png");
+    }
   }
 
-  &.walk-left {
-    background: url("/assets/character-sprites/dick-left.png");
+  @keyframes walk {
+    100% {
+      transform: translateX(-1855px);
+    }
   }
 }
