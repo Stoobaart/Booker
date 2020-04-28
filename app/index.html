@@ -1,14 +1,18 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Booker</title>
-    <meta name="description" content="">
+    <meta name="description" content="Point and click adventure game in the world of Frank Booker and his criminal investigation">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     {{content-for "head"}}
 
+    <link rel="manifest" href="{{rootURL}}manifest.webmanifest">
+    <meta name="msapplication-config" content="{{rootURL}}browserconfig.xml">
+
+    <link rel="manifest" href="{{rootURL}}manifest.webmanifest">
     <link integrity="" rel="stylesheet" href="{{rootURL}}assets/vendor.css">
     <link integrity="" rel="stylesheet" href="{{rootURL}}assets/booker.css">
 
@@ -17,8 +21,13 @@
   <body>
     {{content-for "body"}}
 
+    <audio id="footsteps" src="/assets/music/footsteps.wav" type="audio/wav" />
+    <audio id="intro" src="/assets/music/intro.wav" type="audio/wav" loop />
+    <audio id="hallway" src="/assets/music/hallway.wav" type="audio/wav" />
+
     <script src="{{rootURL}}assets/vendor.js"></script>
     <script src="{{rootURL}}assets/booker.js"></script>
+    <noscript>Sorry, Javascript is required for this site</noscript>
 
     {{content-for "body-footer"}}
   </body>

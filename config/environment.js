@@ -7,20 +7,14 @@ module.exports = function(environment) {
     rootURL: '/',
     locationType: 'auto',
     EmberENV: {
-      FEATURES: {
-        // Here you can enable experimental features on an ember canary build
-        // e.g. EMBER_NATIVE_DECORATOR_SUPPORT: true
-      },
+      FEATURES: {},
       EXTEND_PROTOTYPES: {
         // Prevent Ember Data from overriding Date.parse.
         Date: false
       }
     },
 
-    APP: {
-      // Here you can pass flags/options to your application instance
-      // when it is created
-    }
+    APP: {}
   };
 
   if (environment === 'development') {
@@ -43,9 +37,7 @@ module.exports = function(environment) {
     ENV.APP.autoboot = false;
   }
 
-  if (environment === 'production') {
-    // here you can enable a production-specific feature
-  }
+  if (environment === 'production') {}
 
   return ENV;
 };

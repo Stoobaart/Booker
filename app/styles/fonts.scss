@@ -1,0 +1,9 @@
+$Press_Start_2P-font-path: 'fonts/Press_Start_2P/';
+
+@font-face {
+  font-family: 'PressStart2PType';
+  src: url($Press_Start_2P-font-path + 'PressStart2P-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}

@@ -4,7 +4,19 @@ const EmberApp = require('ember-cli/lib/broccoli/ember-app');
 
 module.exports = function(defaults) {
   let app = new EmberApp(defaults, {
-    // Add options here
+    'asset-cache': {
+      include: [
+        'assets/**/*',
+        'favicon.ico'
+      ]
+    },
+    'ember-cli-babel': {
+      includePolyfill: true
+    },
+    sassOptions: {
+      extension: 'scss'
+    },
+    // sassVariables: 'app/styles/variables.scss'
   });
 
   // Use `app.import` to add additional libraries to the generated

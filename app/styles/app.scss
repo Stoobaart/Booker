@@ -1,0 +1,179 @@
+@import 'normalize';
+@import 'fonts';
+@import 'buttons';
+@import 'player';
+@import 'beginnings';
+@import 'walk-area';
+
+html {
+  font-family: PressStart2PType;
+  background-color: black;
+}
+
+.application {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.public-service-announcement {
+  &_conatiner {
+    position: relative;
+    top: 40%;
+    width: 42rem;
+    margin: auto;
+    animation: fadeIn 1s;
+    -webkit-animation: fadeIn 1s;
+
+    .text {
+      color: white;
+      font-size: 32px;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+  }
+}
+
+.logo {
+  &_container {
+    position: relative;
+    top: 40%;
+    width: 100%;
+    animation: fadeIn 1s;
+    -webkit-animation: fadeIn 1s;
+  }
+
+  &_title {
+    color: white;
+    font-size: 4rem;
+    text-align: center;
+    position: relative;
+    top: -10rem;
+    animation: fadeOut 1s 5s forwards;
+    -webkit-animation: fadeOut 1s 5s forwards;
+  }
+
+  &_overlay {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.dick {
+  position: relative;
+  width: 7rem;
+  left: -2rem;
+
+  &_container {
+    position: relative;
+    left: 5rem;
+    background-color: black;
+    z-index: 1;
+    animation: slideRight 8s forwards linear;
+    -webkit-animation: slideRight 8s forwards linear;
+  }
+}
+
+.start-screen {
+  width: 100%;
+  height: 100%;
+
+  .title-and-btns {
+    position: relative;
+    top: 40%;
+
+    .title {
+      color: darkred;
+      text-shadow: 2px 2px #ff0000;
+      font-size: 6rem;
+      text-align: center;
+      animation: fadeIn 3s;
+      -webkit-animation: fadeIn 3s;
+    }
+  
+    .btns-container {
+      width: 7rem;
+      margin: 2rem auto;
+      animation: fadeIn 5s;
+      -webkit-animation: fadeIn 5s;
+    }
+  }
+
+  .london, .rain {
+    position: absolute;
+    top: 5%;
+    width: 100%;
+    height: 90%;
+    animation: fadeIn 1s;
+    -webkit-animation: fadeIn 1s;
+  }
+
+  .london {
+    z-index: -2;
+  }
+
+  .rain {
+    z-index: -1;
+  }
+
+  &.fade-out {
+    animation: fadeOut 3s forwards;
+    -webkit-animation: fadeOut 3s forwards;
+  }
+}
+
+.game-container {
+  width: 100%;
+  height: 100%;
+
+  .background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    animation: fadeIn 1s;
+    -webkit-animation: fadeIn 1s;
+
+    .scene {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+    }
+  }
+
+  .foreground {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    animation: fadeIn 1s;
+    -webkit-animation: fadeIn 1s;
+  }
+}
+
+@keyframes fadeIn {
+  0%, 50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeOut {
+  0%, 50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes slideRight {
+  100% {
+    left: 120%;
+  }
+}
