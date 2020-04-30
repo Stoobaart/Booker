@@ -1,10 +1,10 @@
 .walk-area {
   &.test-area {
     position: absolute;
-    top: 31rem;
+    bottom: 0;
     left: 0rem;
     width: 100%;
-    height: 19rem;
+    height: 37%;
     -webkit-clip-path: polygon(26% 0%, 74% 0, 139% 100%, -39% 100%);
     clip-path: polygon(26% 0%, 74% 0, 139% 100%, -39% 100%);
   }

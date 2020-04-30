@@ -1,35 +1,33 @@
-<div class="application">
-  {{#if (not this.gameStarted)}}
-    {{#if (not this.gameEntered)}}
-      <div class="public-service-announcement_conatiner">
-        <h1 class="text">This game contains graphic scenes, bad language and alcoholism. Continue?</h1>
-        <button class="menu-btn" {{on "click" this.enterGame}}>CONTINUE</button>
-      </div>
-    {{else}}
-      {{#if this.showLogo}}
-        <div class="logo_container">
-          <div class="dick_container">
-            <img class="dick" src="/assets/images/dick.gif" alt="">
-          </div>
-          <div class="logo_title">STUBALLS GAMES</div>
-        </div>
-        <div class="logo_overlay" {{on "click" this.skipLogo}}></div>
-      {{else}}
-        <div class="start-screen {{if this.fadeOut "fade-out"}}">
-          <div class="title-and-btns">
-            <div class="title">Booker</div>
-            <div class="btns-container">
-              <button class="menu-btn" {{on "click" this.startGame}}>New Game</button>
-            </div>
-          </div>
-          <img class="rain" src="/assets/images/rain.gif" alt="">
-          <img class="london" src="/assets/images/london.png" alt="">
-        </div>
-      {{/if}}
-    {{/if}}
-  {{else}}
-    <div class="game-container">
-      {{outlet}}
+{{#if (not this.gameStarted)}}
+  {{#if (not this.gameEntered)}}
+    <div class="public-service-announcement_conatiner">
+      <h1 class="text">This game contains graphic scenes, bad language and alcoholism. Continue?</h1>
+      <button class="menu-btn" {{on "click" this.enterGame}}>CONTINUE</button>
     </div>
+  {{else}}
+    {{#if this.showLogo}}
+      <div class="logo_container">
+        <div class="dick_container">
+          <img class="dick" src="/assets/images/dick.gif" alt="">
+        </div>
+        <div class="logo_title">STUBALLS GAMES</div>
+      </div>
+      <div class="logo_overlay" {{on "click" this.skipLogo}}></div>
+    {{else}}
+      <div class="start-screen {{if this.fadeOut "fade-out"}}">
+        <div class="title-and-btns">
+          <div class="title">Booker</div>
+          <div class="btns-container">
+            <button class="menu-btn" {{on "click" this.startGame}}>New Game</button>
+          </div>
+        </div>
+        <img class="rain" src="/assets/images/rain.gif" alt="">
+        <img class="london" src="/assets/images/london.png" alt="">
+      </div>
+    {{/if}}
   {{/if}}
-</div>
+{{else}}
+  <div class="game-container">
+    {{outlet}}
+  </div>
+{{/if}}
