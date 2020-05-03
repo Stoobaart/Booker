@@ -16,18 +16,22 @@ module.exports = function(/* environment, appConfig */) {
     icons: [
       {
         src: "/favicon.ico",
-        sizes: "242x256",
+        sizes: "64x64",
         type: "image/ico"
+      }, {
+        src: "assets/favicons/favicon-256.png",
+        sizes: "2256x256",
+        type: "image/png"
       }, 
-      // {
-      //   src: "/assets/images/icon-192.png",
-      //   sizes: "192x192",
-      //   type: "image/png"
-      // }, {
-      //   src: "/assets/images/icon-512.png",
-      //   sizes: "512x512",
-      //   type: "image/png"
-      // }
+      {
+        src: "assets/favicons/favicon-192.png",
+        sizes: "192x192",
+        type: "image/png"
+      }, {
+        src: "assets/favicons/favicon-512.png",
+        sizes: "512x512",
+        type: "image/png"
+      }
     ],
     ms: {
       tileColor: '#fff'

@@ -11,7 +11,7 @@ export default class ApplicationController extends Controller {
   @tracked fadeOut = false;
 
   // SET TO TRUE WHILE DEVELOPING TO SKIP START SCREEN
-  @tracked gameStarted = false;
+  @tracked gameStarted = true;
 
   @action
   enterGame() {

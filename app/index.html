@@ -13,6 +13,7 @@
     <meta name="msapplication-config" content="{{rootURL}}browserconfig.xml">
 
     <link rel="manifest" href="{{rootURL}}manifest.webmanifest">
+    <link rel="icon" href="{{rootURL}}favicon.ico">
     <link integrity="" rel="stylesheet" href="{{rootURL}}assets/vendor.css">
     <link integrity="" rel="stylesheet" href="{{rootURL}}assets/booker.css">
 
@@ -21,9 +22,13 @@
   <body>
     {{content-for "body"}}
 
+    <!-- MUSIC -->
     <audio id="footsteps" src="/assets/music/footsteps.wav" type="audio/wav" />
     <audio id="intro" src="/assets/music/intro.wav" type="audio/wav" loop />
     <audio id="hallway" src="/assets/music/hallway.wav" type="audio/wav" />
+    <audio id="piano" src="/assets/music/test-area-piano.wav" type="audio/wav" loop />
+    <!-- SOUND-FX -->
+    <audio id="rain-interior" src="/assets/sound-fx/rain-interior.wav" type="audio/wav" loop />
 
     <script src="{{rootURL}}assets/vendor.js"></script>
     <script src="{{rootURL}}assets/booker.js"></script>
