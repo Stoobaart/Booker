@@ -1,14 +1,13 @@
 import Service from '@ember/service';
-import { action } from '@ember/object';
 import { cancel, later } from '@ember/runloop';
 
 export default class PlayerActionsService extends Service {
 
   walkAnimationInProgress = false;
   animationTimeout = null;
-  pathfinderAnimationTimeout = null;
   currentlyPathfinding = false;
   desiredLocation = null;
+  direction = null;
 
   manage3DnessInterval = null;
   manageSpriteScaleInterval = null;
@@ -34,7 +33,7 @@ export default class PlayerActionsService extends Service {
     const objectsHTMLCollection = document.getElementsByClassName('object');
     const objects = [...objectsHTMLCollection];
     const playerContainer = document.getElementById('player-container').getBoundingClientRect();
-    const playerBottom = playerContainer.bottom + 50;
+    const playerBottom = playerContainer.bottom + 25;
 
     objects.forEach((object) => {
       const objectFloorArea = object.children[1].getBoundingClientRect();
@@ -48,85 +47,87 @@ export default class PlayerActionsService extends Service {
     });
   }
 
-  pathfind(timeToWalk, direction) {
+  pathfind() {
     const objectsHTMLCollection = document.getElementsByClassName('object');
     const objects = [...objectsHTMLCollection];
 
-    objects.forEach((object) => {
-      const playerContainer = document.getElementById('player-container').getBoundingClientRect();
-      const playerBottom = playerContainer.bottom;
-      const playerXCenter = playerContainer.right - ((playerContainer.right - playerContainer.left) / 2);
+    const playerContainer = document.getElementById('player-container').getBoundingClientRect();
+    const playerBottom = playerContainer.bottom;
+    const playerXCenter = playerContainer.right - ((playerContainer.right - playerContainer.left) / 2);
 
+    objects.forEach((object) => {
       const objectFloorArea = object.children[1].getBoundingClientRect();
       const objectTop = objectFloorArea.top;
       const objectBottom = objectFloorArea.top + objectFloorArea.height;
       const objectLeft = objectFloorArea.left;
       const objectRight = objectFloorArea.left + objectFloorArea.width;
+      const objectXCenter = objectRight - ((objectRight - objectLeft) / 2);
+      const objectYCenter = objectBottom - ((objectBottom - objectTop) / 2);
 
       const playerWithinObjectBounds = playerXCenter > objectLeft && playerXCenter < objectRight && playerBottom > objectTop && playerBottom < objectBottom;
 
       if (playerWithinObjectBounds && !this.currentlyPathfinding) {
         this.currentlyPathfinding = true;
-        
-        if (direction === 'left' || direction === 'right') {
-          const moveAbovePosition = objectTop - 50;
-          const adjustedLeft = direction === 'left' ? playerContainer.left + 74 : playerContainer.left + 244 ;
-          const nextPath1 = { pageY: moveAbovePosition, pageX: adjustedLeft }
-          this.walk(nextPath1);
+
+        const goingDown = playerBottom < objectYCenter && playerXCenter > objectLeft + 25 && playerXCenter < objectRight - 25;
+        const goingUp = playerBottom > objectYCenter && playerXCenter > objectLeft + 25 && playerXCenter < objectRight - 25;
+        const goingRight = playerXCenter < objectXCenter && !goingUp && !goingDown;
+        const goingLeft = playerXCenter > objectXCenter && !goingUp && !goingDown;
+
+        if (goingLeft || goingRight) {
+          const nearestY = this.desiredLocation.pageY > objectYCenter ? (objectBottom + 50) : (objectTop - 25);
+          const adjustedLeft = goingLeft ? playerContainer.left + 50 : playerContainer.left + 220 ;
+          const coord = { pageY: nearestY, pageX: adjustedLeft };
+          this.walk(coord);
+          const timeToWalk = Math.abs(nearestY - playerBottom) * 10;
 
           later(() => {
-            const nextPath = { pageY: moveAbovePosition, pageX: this.desiredLocation.pageX }
-            this.walk(nextPath);
+            const playerContainer = document.getElementById('player-container').getBoundingClientRect();
+            const playerXCenter = playerContainer.right - ((playerContainer.right - playerContainer.left) / 2);
+            const coord = { pageY: nearestY, pageX: this.desiredLocation.pageX }
+            this.walk(coord);
+            const timeToWalk = Math.abs(this.desiredLocation.pageX - playerXCenter) * 4;
 
-            const secondTimer = timeToWalk - 700;
-
-            this.pathfinderAnimationTimeout = later(() => {
-              const nextPath = { pageY: this.desiredLocation.pageY, pageX: this.desiredLocation.pageX }
-              this.walk(nextPath);
-            }, secondTimer);
-          }, 700);
+            later(() => {
+              const coord = { pageY: this.desiredLocation.pageY, pageX: this.desiredLocation.pageX }
+              this.walk(coord);
+            }, timeToWalk);
+          }, timeToWalk);
         } else {
-          const adjustedTop = playerContainer.top + playerContainer.height + 50;
-          const objectCenter = objectRight - ((objectRight - objectLeft) / 2);
-          const closestDirectionXCoord = playerXCenter > objectCenter ? (objectRight + 50) : (objectLeft - 50);
-
-          const nextPath1 = { pageY: adjustedTop, pageX: closestDirectionXCoord }
-          this.walk(nextPath1);
+          const nearestX = playerXCenter > objectXCenter ? (objectRight + 150) : (objectLeft - 150);
+          const coord = { pageY: playerBottom, pageX: nearestX };
+          this.walk(coord);
+          const timeToWalk = Math.abs(nearestX - playerContainer.right) * 5;
 
           later(() => {
-            const nextPath = { pageY: this.desiredLocation.pageY, pageX: closestDirectionXCoord }
-            this.walk(nextPath);
-
-            const secondTimer = timeToWalk - 700;
-
-            this.pathfinderAnimationTimeout = later(() => {
-              const nextPath = { pageY: this.desiredLocation.pageY, pageX: this.desiredLocation.pageX }
-              this.walk(nextPath);
-            }, secondTimer);
-          }, 2000);
+            const coord = { pageY: this.desiredLocation.pageY, pageX: this.desiredLocation.pageX }
+            this.walk(coord);
+          }, timeToWalk);
         }
       }
     });
   }
 
+  adjustedScaleSpriteHeight(clickYPosition) {
+    const walkArea = document.getElementById('walk-area');
+    if (walkArea.offsetHeight < 280) {
+      return clickYPosition < 304 ? 200 : 224;
+    } else {
+      return clickYPosition < 640 ? 274 : 314;
+    }
+  }
+
   walk(e) {
+    window.clearInterval(this.manage3DnessInterval);
 
     if (e.target) {
-      cancel(this.pathfinderAnimationTimeout);
+      this.currentlyPathfinding = false;
       this.desiredLocation = { pageY: e.pageY, pageX: e.pageX };
     }
     const playerContainer = document.getElementById('player-container');
     const playerSprite = document.getElementById('player-sprite');
-    const walkArea = document.getElementById('walk-area');
     const clickXPosition = e.pageX - 74;
-    let adjustedScaleSpriteHeight;
-    if (walkArea.offsetHeight < 280) {
-      adjustedScaleSpriteHeight = e.pageY < 304 ? 200 : 224;
-    } else {
-      adjustedScaleSpriteHeight = e.pageY < 640 ? 274 : 314;
-    }
-
-    const clickYPosition = e.pageY - adjustedScaleSpriteHeight;
+    const clickYPosition = e.pageY - this.adjustedScaleSpriteHeight(e.pageY);
     const playerXPosition = playerContainer.offsetLeft;
     const playerYPosition = playerContainer.offsetTop;
     const playerPositionXDiff = clickXPosition - playerXPosition;
@@ -138,31 +139,26 @@ export default class PlayerActionsService extends Service {
     playerContainer.style.left = `${clickXPosition}px`;
     playerContainer.style.transition = `top ${timeToWalk}ms linear, left ${timeToWalk}ms linear`;
 
-    let direction;
-
     if ((playerPositionXDiff > 0) && ((Math.abs(playerPositionXDiff)) > (Math.abs(playerPositionYDiff)))) {
       playerSprite.className = 'walk right';
-      direction = 'right';
+      this.direction = 'right';
     } else if ((playerPositionYDiff > 0 ) && ((Math.abs(playerPositionXDiff)) < (Math.abs(playerPositionYDiff)))) {
       playerSprite.className = 'walk down';
-      direction = 'down';
+      this.direction = 'down';
     } else if ((playerPositionYDiff < 0 ) && ((Math.abs(playerPositionXDiff)) < (Math.abs(playerPositionYDiff)))) {
       playerSprite.className = 'walk up';
-      direction = 'up';
+      this.direction = 'up';
     } else if ((playerPositionXDiff < 0) && ((Math.abs(playerPositionXDiff)) > (Math.abs(playerPositionYDiff)))) {
       playerSprite.className = 'walk left';
-      direction = 'left';
+      this.direction = 'left';
     }
 
     if (this.walkAnimationInProgress) {
       cancel(this.animationTimeout);
-      window.clearInterval(this.manage3DnessInterval);
-      window.clearInterval(this.manageSpriteScaleInterval);
     }
 
     const manage3Dness = () => {
-      // this.setObjectsZIndices(e);
-      this.pathfind(timeToWalk, direction);
+      this.pathfind();
     };
 
     const manageSpriteScale = () => {
@@ -170,11 +166,11 @@ export default class PlayerActionsService extends Service {
       this.setSpriteScale();
     };
 
-    this.manage3DnessInterval = window.setInterval(manage3Dness, 10);
-    this.manageSpriteScaleInterval = window.setInterval(manageSpriteScale, 100);
+    this.manage3DnessInterval = window.setInterval(manage3Dness, 1);
+    this.manageSpriteScaleInterval = window.setInterval(manageSpriteScale, 1);
 
     this.animationTimeout = later(() => {
-      playerSprite.className = `standing ${direction}`;
+      playerSprite.className = `standing ${this.direction}`;
       this.walkAnimationInProgress = false;
       window.clearInterval(this.manage3DnessInterval);
       window.clearInterval(this.manageSpriteScaleInterval);
@@ -183,4 +179,17 @@ export default class PlayerActionsService extends Service {
 
     this.walkAnimationInProgress = true;
   }
+
+  teleport(e) {
+    cancel(this.animationTimeout);
+    const playerContainer = document.getElementById('player-container');
+    const playerSprite = document.getElementById('player-sprite');
+    playerSprite.className = `standing ${this.direction}`;
+    const clickXPosition = e.pageX - 74;
+    const clickYPosition = e.pageY - this.adjustedScaleSpriteHeight(e.pageY);
+    playerContainer.style.top = `${clickYPosition}px`;
+    playerContainer.style.left = `${clickXPosition}px`;
+    playerContainer.style.transition = 'none';
+  }
+
 }

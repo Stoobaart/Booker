@@ -16,4 +16,9 @@ export default class WalkAreaComponent extends Component {
   walk(e) {
     this.playerActions.walk(e);
   }
+
+  @action
+  teleport(e) {
+    this.playerActions.teleport(e);
+  }
 }

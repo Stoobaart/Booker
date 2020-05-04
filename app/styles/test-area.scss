@@ -15,30 +15,48 @@
 .foreground {
   .object {
     z-index: 2;
+
+    &.container {
+      pointer-events: none;
+      position: absolute;
+    }
+
+    .image {
+      width: 100%;
+      height: 100%;
+    }
+
+    .occupied-area { 
+      position: relative;
+      pointer-events: visible;
+    }
   }
 
   .couch {
-    &-container {
-      pointer-events: none;
-      position: absolute;
-      top: 60%;
-      left: 30%;
-      width: 40%;
-      height: 40%;
+    top: 60%;
+    left: 36%;
+    width: 40%;
+    height: 40%;
 
-      .occupied-area {
-        position: relative;
-        top: -11rem;
-        left: 0;
-        width: 100%;
-        height: 40%;
-        pointer-events: visible;
-      }
-    }
-
-    &-image {
+    .occupied-area {
+      top: -11rem;
+      left: 0;
       width: 100%;
-      height: 100%;
+      height: 40%;
+    }
+  }
+
+  .pillar {
+    top: 9%;
+    left: 21%;
+    width: 10%;
+    height: 70%;
+
+    .occupied-area {
+      top: -5rem;
+      left: -1rem;
+      width: 118%;
+      height: 20%;
     }
   }
 }
