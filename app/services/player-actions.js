@@ -54,9 +54,12 @@ export default class PlayerActionsService extends Service {
     const playerContainer = document.getElementById('player-container').getBoundingClientRect();
     const playerBottom = playerContainer.bottom;
     const playerXCenter = playerContainer.right - ((playerContainer.right - playerContainer.left) / 2);
+    const playerWidth = playerContainer.width;
 
     objects.forEach((object) => {
       const objectFloorArea = object.children[1].getBoundingClientRect();
+      const objectWidth = objectFloorArea.width;
+      const objectHeight = objectFloorArea.height;
       const objectTop = objectFloorArea.top;
       const objectBottom = objectFloorArea.top + objectFloorArea.height;
       const objectLeft = objectFloorArea.left;
@@ -64,19 +67,19 @@ export default class PlayerActionsService extends Service {
       const objectXCenter = objectRight - ((objectRight - objectLeft) / 2);
       const objectYCenter = objectBottom - ((objectBottom - objectTop) / 2);
 
-      const playerWithinObjectBounds = playerXCenter > objectLeft && playerXCenter < objectRight && playerBottom > objectTop && playerBottom < objectBottom;
+      const playerWithinObjectBounds = playerContainer.right > objectLeft && playerContainer.left < objectRight && playerBottom > objectTop && playerBottom < objectBottom;
 
       if (playerWithinObjectBounds && !this.currentlyPathfinding) {
         this.currentlyPathfinding = true;
 
-        const goingDown = playerBottom < objectYCenter && playerXCenter > objectLeft + 25 && playerXCenter < objectRight - 25;
-        const goingUp = playerBottom > objectYCenter && playerXCenter > objectLeft + 25 && playerXCenter < objectRight - 25;
+        const goingDown = playerBottom < objectYCenter && playerXCenter > objectLeft + (objectWidth * .1) && playerXCenter < objectRight - (objectWidth * .1);
+        const goingUp = playerBottom > objectYCenter && playerXCenter > objectLeft + (objectWidth * .1) && playerXCenter < objectRight - (objectWidth * .1);
         const goingRight = playerXCenter < objectXCenter && !goingUp && !goingDown;
         const goingLeft = playerXCenter > objectXCenter && !goingUp && !goingDown;
 
         if (goingLeft || goingRight) {
-          const nearestY = this.desiredLocation.pageY > objectYCenter ? (objectBottom + 50) : (objectTop - 25);
-          const adjustedLeft = goingLeft ? playerContainer.left + 50 : playerContainer.left + 220 ;
+          const nearestY = this.desiredLocation.pageY > objectYCenter ? (objectBottom + (objectHeight * .01)) : (objectTop - (objectHeight * .01));
+          const adjustedLeft = goingLeft ? playerContainer.left * 1.02 : playerContainer.left * 1.6 ;
           const coord = { pageY: nearestY, pageX: adjustedLeft };
           this.walk(coord);
           const timeToWalk = Math.abs(nearestY - playerBottom) * 10;
@@ -84,17 +87,18 @@ export default class PlayerActionsService extends Service {
           later(() => {
             const playerContainer = document.getElementById('player-container').getBoundingClientRect();
             const playerXCenter = playerContainer.right - ((playerContainer.right - playerContainer.left) / 2);
-            const coord = { pageY: nearestY, pageX: this.desiredLocation.pageX }
+            const adjustedX = goingLeft ? this.desiredLocation.pageX * .95 : this.desiredLocation.pageX * 1.05;
+            const coord = { pageY: nearestY, pageX: adjustedX }
             this.walk(coord);
-            const timeToWalk = Math.abs(this.desiredLocation.pageX - playerXCenter) * 4;
+            const timeToWalk = Math.abs(this.desiredLocation.pageX - playerXCenter) * 5;
 
             later(() => {
-              const coord = { pageY: this.desiredLocation.pageY, pageX: this.desiredLocation.pageX }
+              const coord = { pageY: this.desiredLocation.pageY, pageX: adjustedX }
               this.walk(coord);
             }, timeToWalk);
           }, timeToWalk);
         } else {
-          const nearestX = playerXCenter > objectXCenter ? (objectRight + 150) : (objectLeft - 150);
+          const nearestX = playerXCenter > objectXCenter ? (objectRight + playerWidth) : (objectLeft - playerWidth);
           const coord = { pageY: playerBottom, pageX: nearestX };
           this.walk(coord);
           const timeToWalk = Math.abs(nearestX - playerContainer.right) * 5;
@@ -110,8 +114,8 @@ export default class PlayerActionsService extends Service {
 
   adjustedScaleSpriteHeight(clickYPosition) {
     const walkArea = document.getElementById('walk-area');
-    if (walkArea.offsetHeight < 280) {
-      return clickYPosition < 304 ? 200 : 224;
+    if (walkArea.offsetHeight < 268) {
+      return clickYPosition < 304 ? 210 : 244;
     } else {
       return clickYPosition < 640 ? 274 : 314;
     }
@@ -119,6 +123,7 @@ export default class PlayerActionsService extends Service {
 
   walk(e) {
     window.clearInterval(this.manage3DnessInterval);
+    window.clearInterval(this.manageSpriteScaleInterval);
 
     if (e.target) {
       this.currentlyPathfinding = false;

@@ -5,9 +5,12 @@
 @import 'beginnings';
 @import 'walk-area';
 @import 'test-area';
+@import 'object';
 
 * {
   user-select: none;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+  -webkit-tap-highlight-color: transparent;
 }
 
 html {
@@ -22,6 +25,11 @@ body {
   min-width: 1440px;
   min-height: 798px;
   position: relative;
+
+  @media (max-width: 1024px) {
+    min-width: 0;
+    min-height: 0;
+  }
 }
 
 .public-service-announcement {

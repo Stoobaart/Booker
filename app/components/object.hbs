@@ -1,0 +1,14 @@
+<div class="object container {{@object.name}}">
+  <img class="image" src="/assets/objects/{{@object.name}}.png" alt="">
+  <div class="occupied-area"></div>
+  {{#if @object.isInteractive}}
+    <div class="interactive-area" {{on "click" this.showIcons}} {{on-click-outside (fn this.removeIcons)}}></div>
+  {{/if}}
+</div>
+
+{{#if this.isClicked}}
+  <div id="interaction-icons" class="interaction-icons">
+    <div class="look" {{on "click" this.lookAt}}>eye</div>
+    <div class="interact" {{on "click" this.interactWith}}>hand</div>
+  </div>
+{{/if}}
