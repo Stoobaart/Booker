@@ -6,7 +6,8 @@ export default class TestAreaRoute extends Route {
       {
         name: 'couch',
         isInteractive: true,
-        isCollected: false
+        isCollected: false,
+        canInteractWith: true
       }, {
         name: 'pillar',
         isInteractive: false,

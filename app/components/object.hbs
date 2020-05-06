@@ -8,7 +8,13 @@
 
 {{#if this.isClicked}}
   <div id="interaction-icons" class="interaction-icons">
-    <div class="look" {{on "click" this.lookAt}}>eye</div>
-    <div class="interact" {{on "click" this.interactWith}}>hand</div>
+    <div class="look" {{on "click" this.lookAt}}>
+      <img src="/assets/images/inspect-icon.png" class="icon">
+    </div>
+    {{#if @object.canInteractWith}}
+      <div class="interact" {{on "click" this.interactWith}}>
+        <img src="/assets/images/interact-icon.png" class="icon">
+      </div>
+    {{/if}}
   </div>
 {{/if}}

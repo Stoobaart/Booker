@@ -13,7 +13,7 @@ export default class ObjectComponent extends Component {
     later(() => {
       const iconsContainer = document.getElementById('interaction-icons');
       iconsContainer.style.top = `${e.pageY - 50}px`;
-      iconsContainer.style.left = `${e.pageX - 30}px`;
+      iconsContainer.style.left = `${e.pageX - 45}px`;
     });
   }
 

@@ -67,7 +67,7 @@ export default class PlayerActionsService extends Service {
       const objectXCenter = objectRight - ((objectRight - objectLeft) / 2);
       const objectYCenter = objectBottom - ((objectBottom - objectTop) / 2);
 
-      const playerWithinObjectBounds = playerContainer.right > objectLeft && playerContainer.left < objectRight && playerBottom > objectTop && playerBottom < objectBottom;
+      const playerWithinObjectBounds = (playerContainer.right / .95) > objectLeft && (playerContainer.left + 1.05) < objectRight && playerBottom > objectTop && playerBottom < objectBottom;
 
       if (playerWithinObjectBounds && !this.currentlyPathfinding) {
         this.currentlyPathfinding = true;
@@ -131,7 +131,7 @@ export default class PlayerActionsService extends Service {
     }
     const playerContainer = document.getElementById('player-container');
     const playerSprite = document.getElementById('player-sprite');
-    const clickXPosition = e.pageX - 74;
+    const clickXPosition = e.pageX - 50;
     const clickYPosition = e.pageY - this.adjustedScaleSpriteHeight(e.pageY);
     const playerXPosition = playerContainer.offsetLeft;
     const playerYPosition = playerContainer.offsetTop;
