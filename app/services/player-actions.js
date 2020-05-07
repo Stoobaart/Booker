@@ -10,7 +10,7 @@ export default class PlayerActionsService extends Service {
   direction = null;
 
   manage3DnessInterval = null;
-  manageSpriteScaleInterval = null;
+  manage3dnessInterval = null;
 
   setSpriteScale() {
     const walkArea = document.getElementById('walk-area');
@@ -122,28 +122,42 @@ export default class PlayerActionsService extends Service {
   }
 
   walk(e) {
-    window.clearInterval(this.manage3DnessInterval);
-    window.clearInterval(this.manageSpriteScaleInterval);
+    // Reset lingering intervals
+    window.clearInterval(this.manage3dnessInterval);
 
+    // if click triggered walk
     if (e.target) {
       this.currentlyPathfinding = false;
+      // Set the desired location used for the pathfinding final position
       this.desiredLocation = { pageY: e.pageY, pageX: e.pageX };
     }
+
     const playerContainer = document.getElementById('player-container');
     const playerSprite = document.getElementById('player-sprite');
-    const clickXPosition = e.pageX - 50;
-    const clickYPosition = e.pageY - this.adjustedScaleSpriteHeight(e.pageY);
-    const playerXPosition = playerContainer.offsetLeft;
-    const playerYPosition = playerContainer.offsetTop;
-    const playerPositionXDiff = clickXPosition - playerXPosition;
-    const playerPositionYDiff = clickYPosition - playerYPosition;
+    
+    // click position to use when clicking directly on the screen, 
+    // center sprite X and adjust Y for sprite changing size when scaling for perspective
+    let clickXPosition = e.pageX - 50;
+    let clickYPosition = e.pageY - this.adjustedScaleSpriteHeight(e.pageY);
 
+    // If the X and Y is passed into this function (i.e. not from clicking to walk somewhere)
+    // ensure the passed value is made proportional for different screen sizes
+    if (!e.target) {
+      clickXPosition = (e.pageX * window.innerWidth / 1440) - 50;
+      const convertedY = e.pageY * window.innerHeight / 798;
+      clickYPosition = convertedY - this.adjustedScaleSpriteHeight(convertedY);
+    }
+    
+    // Get differences between click location and sprite position
+    const playerPositionXDiff = clickXPosition - playerContainer.offsetLeft;
+    const playerPositionYDiff = clickYPosition - playerContainer.offsetTop;
+    // Calculate the time it takes to walk to destination
     const timeToWalk = (Math.abs(playerPositionXDiff) + Math.abs(playerPositionYDiff)) * 4;
-
+    // Animate the sprite container to the position
     playerContainer.style.top = `${clickYPosition}px`;
     playerContainer.style.left = `${clickXPosition}px`;
     playerContainer.style.transition = `top ${timeToWalk}ms linear, left ${timeToWalk}ms linear`;
-
+    // Figure out which direction the sprite is moving in and add the corresponding class
     if ((playerPositionXDiff > 0) && ((Math.abs(playerPositionXDiff)) > (Math.abs(playerPositionYDiff)))) {
       playerSprite.className = 'walk right';
       this.direction = 'right';
@@ -157,28 +171,23 @@ export default class PlayerActionsService extends Service {
       playerSprite.className = 'walk left';
       this.direction = 'left';
     }
-
+    // Cancel the animation if the player clicks somewhere else before finishing the current animation
     if (this.walkAnimationInProgress) {
       cancel(this.animationTimeout);
     }
-
-    const manage3Dness = () => {
+    // Callback for the methods that manage pathfinding, and depth effects
+    const manage3dness = () => {
       this.pathfind();
-    };
-
-    const manageSpriteScale = () => {
       this.setObjectsZIndices(e);
       this.setSpriteScale();
     };
-
-    this.manage3DnessInterval = window.setInterval(manage3Dness, 1);
-    this.manageSpriteScaleInterval = window.setInterval(manageSpriteScale, 1);
-
+    // Set an interval to call the above callback every millisecond
+    this.manage3dnessInterval = window.setInterval(manage3dness, 1);
+    // clear everything after arriving at destination
     this.animationTimeout = later(() => {
       playerSprite.className = `standing ${this.direction}`;
       this.walkAnimationInProgress = false;
-      window.clearInterval(this.manage3DnessInterval);
-      window.clearInterval(this.manageSpriteScaleInterval);
+      window.clearInterval(this.manage3dnessInterval);
       this.currentlyPathfinding = false;
     }, timeToWalk);
 

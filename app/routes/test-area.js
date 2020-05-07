@@ -7,7 +7,11 @@ export default class TestAreaRoute extends Route {
         name: 'couch',
         isInteractive: true,
         isCollected: false,
-        canInteractWith: true
+        canInteractWith: true,
+        interactionCoord: {
+          pageY: 569,
+          pageX: 730
+        }
       }, {
         name: 'pillar',
         isInteractive: false,

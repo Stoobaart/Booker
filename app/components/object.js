@@ -2,9 +2,15 @@ import Component from '@glimmer/component';
 import { action } from '@ember/object';
 import { tracked } from '@glimmer/tracking';
 import { later } from '@ember/runloop';
+import { inject as service } from '@ember/service';
 
 export default class ObjectComponent extends Component {
+
+  @service playerActions;
+
   @tracked isClicked = false;
+
+  object = this.args.object;
 
   @action
   showIcons(e) {
@@ -24,6 +30,7 @@ export default class ObjectComponent extends Component {
 
   @action
   lookAt() {
+    this.playerActions.walk(this.object.interactionCoord);
     this.isClicked = false;
   }
 
