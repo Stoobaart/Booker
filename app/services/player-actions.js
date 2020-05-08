@@ -47,7 +47,7 @@ export default class PlayerActionsService extends Service {
     });
   }
 
-  pathfind() {
+  pathfind(coordsFromObject) {
     const objectsHTMLCollection = document.getElementsByClassName('object');
     const objects = [...objectsHTMLCollection];
 
@@ -98,7 +98,7 @@ export default class PlayerActionsService extends Service {
 
             later(() => {
               const coord = { pageY: this.desiredLocation.pageY, pageX: this.desiredLocation.pageX }
-              this.walk(coord);
+              this.walk(coord, coordsFromObject);
             }, timeToWalk);
           }, timeToWalk);
         } else {
@@ -110,7 +110,7 @@ export default class PlayerActionsService extends Service {
 
           later(() => {
             const coord = { pageY: this.desiredLocation.pageY, pageX: this.desiredLocation.pageX }
-            this.walk(coord);
+            this.walk(coord, coordsFromObject);
           }, timeToWalk);
         }
       }
@@ -126,17 +126,17 @@ export default class PlayerActionsService extends Service {
     }
   }
 
-  walk(e, objectInteraction) {
+  walk(e, coordsFromObject) {
     // Reset lingering intervals
     window.clearInterval(this.manage3dnessInterval);
 
     // if click triggered walk
-    if (e.target) {
+    if (e.target || coordsFromObject) {
       this.currentlyPathfinding = false;
       // Set the desired location used for the pathfinding final position
       this.desiredLocation = { pageY: e.pageY, pageX: e.pageX };
     }
-
+    console.log(this.desiredLocation);
     const playerContainer = document.getElementById('player-container');
     const playerSprite = document.getElementById('player-sprite');
     
@@ -146,7 +146,7 @@ export default class PlayerActionsService extends Service {
     let clickYPosition = e.pageY - this.adjustedScaleSpriteHeight(e.pageY);
 
     // If walking due to an object interaction, ensure the passed value is made proportional for different screen sizes
-    if (objectInteraction) {
+    if (coordsFromObject) {
       clickXPosition = (e.pageX * window.innerWidth / 1440) - 50;
       const convertedY = e.pageY * window.innerHeight / 798;
       clickYPosition = convertedY - this.adjustedScaleSpriteHeight(convertedY);
@@ -181,7 +181,7 @@ export default class PlayerActionsService extends Service {
     }
     // Callback for the methods that manage pathfinding, and depth effects
     const manage3dness = () => {
-      this.pathfind();
+      this.pathfind(coordsFromObject);
       this.setObjectsZIndices(e);
       this.setSpriteScale();
     };

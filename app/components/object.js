@@ -30,7 +30,7 @@ export default class ObjectComponent extends Component {
 
   @action
   lookAt() {
-    this.playerActions.walk(this.object.interactionCoord, { objectInteraction: true });
+    this.playerActions.walk(this.object.interactionCoord, { coordsFromObject: true });
     this.isClicked = false;
   }
 
