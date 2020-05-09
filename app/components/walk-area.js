@@ -5,20 +5,20 @@ import { inject as service } from '@ember/service';
 
 export default class WalkAreaComponent extends Component {
 
-  @service playerActions;
+  @service moveActions;
 
   constructor() {
     super(...arguments);
-    scheduleOnce('afterRender', this, this.playerActions.setSpriteScale);
+    scheduleOnce('afterRender', this, this.moveActions.setSpriteScale);
   }
 
   @action
   walk(e) {
-    this.playerActions.walk(e);
+    this.moveActions.walk(e);
   }
 
   @action
   teleport(e) {
-    this.playerActions.teleport(e);
+    this.moveActions.teleport(e);
   }
 }

@@ -11,7 +11,18 @@ export default class TestAreaRoute extends Route {
         interactionCoord: {
           pageY: 569,
           pageX: 730
-        }
+        },
+        lines: [
+          {
+            character: 'frank',
+            mood: 'regular',
+            line: `IT'S A COUCH`
+          }, {
+            character: 'frank',
+            mood: 'angry',
+            line: `THAT'S OBVIOUS, YOU PENIS!`
+          }
+        ]
       }, {
         name: 'pillar',
         isInteractive: false,

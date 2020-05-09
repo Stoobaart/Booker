@@ -28,6 +28,12 @@
   {{/if}}
 {{else}}
   <div id="game-container" class="game-container">
+    {{#if this.talkActions.showTalkOverlay}}
+      <div class="talk-overlay" {{on "click" this.talkActions.runNextStep}}>
+        <div class="portrait {{this.talkActions.portrait}}">{{this.talkActions.portrait}} {{this.talkActions.mood}}</div>
+        <div class="speach">{{this.talkActions.speach}}</div>
+      </div>
+    {{/if}}
     {{outlet}}
   </div>
 {{/if}}

@@ -6,6 +6,8 @@ import { inject as service } from '@ember/service';
 
 export default class ApplicationController extends Controller {
   @service router;
+  @service talkActions
+
   @tracked gameEntered = false;
   @tracked showLogo = true;
   @tracked fadeOut = false;

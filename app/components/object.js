@@ -6,7 +6,8 @@ import { inject as service } from '@ember/service';
 
 export default class ObjectComponent extends Component {
 
-  @service playerActions;
+  @service moveActions;
+  @service talkActions;
 
   @tracked isClicked = false;
 
@@ -37,11 +38,11 @@ export default class ObjectComponent extends Component {
 
   @action
   lookAt() {
-    this.playerActions.walk(this.object.interactionCoord, { coordsFromObject: true });
+    this.moveActions.walk(this.object.interactionCoord, { coordsFromObject: true });
     const checkIfArrived = () => {
-      if (this.playerActions.hasArrived) {
+      if (this.moveActions.hasArrived) {
         this.clearInterval();
-        return this.test(this.object);
+        return this.talkActions.setLinesAndSpeak(this.object.lines);
       }
     };
     if (!this.checkIfArrivedInterval) {
@@ -54,9 +55,5 @@ export default class ObjectComponent extends Component {
   @action
   interactWith() {
     this.isClicked = false;
-  }
-
-  test(object) {
-    console.log(object.name);
   }
 }

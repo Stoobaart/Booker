@@ -1,7 +1,7 @@
 import Service from '@ember/service';
 import { cancel, later } from '@ember/runloop';
 
-export default class PlayerActionsService extends Service {
+export default class moveActionsService extends Service {
 
   walkAnimationInProgress = false;
   animationTimeout = null;
