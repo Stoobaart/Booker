@@ -8,7 +8,7 @@
 
 {{#if this.isClicked}}
   <div id="interaction-icons" class="interaction-icons">
-    <div class="look" {{on "click" this.lookAt}}>
+    <div class="look" {{on "click" this.lookAt}} {{on-click-outside (fn this.clearInterval)}}>
       <img src="/assets/images/inspect-icon.png" class="icon">
     </div>
     {{#if @object.canInteractWith}}

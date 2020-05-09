@@ -11,6 +11,7 @@ export default class ObjectComponent extends Component {
   @tracked isClicked = false;
 
   object = this.args.object;
+  checkIfArrivedInterval = null;
 
   @action
   showIcons(e) {
@@ -29,13 +30,33 @@ export default class ObjectComponent extends Component {
   }
 
   @action
+  clearInterval() {
+    window.clearInterval(this.checkIfArrivedInterval);
+    this.checkIfArrivedInterval = null;
+  }
+
+  @action
   lookAt() {
     this.playerActions.walk(this.object.interactionCoord, { coordsFromObject: true });
+    const checkIfArrived = () => {
+      if (this.playerActions.hasArrived) {
+        this.clearInterval();
+        return this.test(this.object);
+      }
+    };
+    if (!this.checkIfArrivedInterval) {
+      this.checkIfArrivedInterval = window.setInterval(checkIfArrived, 1000);
+    }
+    
     this.isClicked = false;
   }
 
   @action
   interactWith() {
     this.isClicked = false;
+  }
+
+  test(object) {
+    console.log(object.name);
   }
 }

@@ -7,6 +7,7 @@ export default class PlayerActionsService extends Service {
   animationTimeout = null;
   currentlyPathfinding = false;
   desiredLocation = null;
+  hasArrived = false; 
   direction = null;
 
   manage3DnessInterval = null;
@@ -98,7 +99,8 @@ export default class PlayerActionsService extends Service {
 
             later(() => {
               const coord = { pageY: this.desiredLocation.pageY, pageX: this.desiredLocation.pageX }
-              this.walk(coord, coordsFromObject);
+              const pathfinding = true;
+              this.walk(coord, coordsFromObject, pathfinding);
             }, timeToWalk);
           }, timeToWalk);
         } else {
@@ -110,7 +112,8 @@ export default class PlayerActionsService extends Service {
 
           later(() => {
             const coord = { pageY: this.desiredLocation.pageY, pageX: this.desiredLocation.pageX }
-            this.walk(coord, coordsFromObject);
+            const pathfinding = true;
+            this.walk(coord, coordsFromObject, pathfinding);
           }, timeToWalk);
         }
       }
@@ -126,17 +129,23 @@ export default class PlayerActionsService extends Service {
     }
   }
 
-  walk(e, coordsFromObject) {
+  walk(e, coordsFromObject, pathfinding) {
     // Reset lingering intervals
     window.clearInterval(this.manage3dnessInterval);
+    this.hasArrived = false;
 
     // if click triggered walk
     if (e.target || coordsFromObject) {
       this.currentlyPathfinding = false;
       // Set the desired location used for the pathfinding final position
-      this.desiredLocation = { pageY: e.pageY, pageX: e.pageX };
+      if (coordsFromObject && !pathfinding) {
+        const clickXPosition = (e.pageX * window.outerWidth / 1440) * .9;
+        const clickYPosition = (e.pageY * window.outerHeight / 798) * .95;
+        this.desiredLocation = { pageY: clickYPosition, pageX: clickXPosition };
+      } else {
+        this.desiredLocation = { pageY: e.pageY, pageX: e.pageX };
+      }
     }
-    console.log(this.desiredLocation);
     const playerContainer = document.getElementById('player-container');
     const playerSprite = document.getElementById('player-sprite');
     
@@ -146,9 +155,9 @@ export default class PlayerActionsService extends Service {
     let clickYPosition = e.pageY - this.adjustedScaleSpriteHeight(e.pageY);
 
     // If walking due to an object interaction, ensure the passed value is made proportional for different screen sizes
-    if (coordsFromObject) {
-      clickXPosition = (e.pageX * window.innerWidth / 1440) - 50;
-      const convertedY = e.pageY * window.innerHeight / 798;
+    if (coordsFromObject && !pathfinding) {
+      clickXPosition = (e.pageX * window.outerWidth / 1440)  * .9;
+      const convertedY = (e.pageY * window.outerHeight / 798) * .95;
       clickYPosition = convertedY - this.adjustedScaleSpriteHeight(convertedY);
     }
     
@@ -156,11 +165,17 @@ export default class PlayerActionsService extends Service {
     const playerPositionXDiff = clickXPosition - playerContainer.offsetLeft;
     const playerPositionYDiff = clickYPosition - playerContainer.offsetTop;
     // Calculate the time it takes to walk to destination
-    const timeToWalk = (Math.abs(playerPositionXDiff) + Math.abs(playerPositionYDiff)) * 4;
+    let timeToWalk;
+    if (window.outerHeight <= 414) {
+      timeToWalk = (Math.abs(playerPositionXDiff) + Math.abs(playerPositionYDiff)) * 6;
+    } else {
+      timeToWalk = (Math.abs(playerPositionXDiff) + Math.abs(playerPositionYDiff)) * 4;
+    }
     // Animate the sprite container to the position
     playerContainer.style.top = `${clickYPosition}px`;
     playerContainer.style.left = `${clickXPosition}px`;
     playerContainer.style.transition = `top ${timeToWalk}ms linear, left ${timeToWalk}ms linear`;
+
     // Figure out which direction the sprite is moving in and add the corresponding class
     if ((playerPositionXDiff > 0) && ((Math.abs(playerPositionXDiff)) > (Math.abs(playerPositionYDiff)))) {
       playerSprite.className = 'walk right';
@@ -171,7 +186,7 @@ export default class PlayerActionsService extends Service {
     } else if ((playerPositionYDiff < 0 ) && ((Math.abs(playerPositionXDiff)) < (Math.abs(playerPositionYDiff)))) {
       playerSprite.className = 'walk up';
       this.direction = 'up';
-    } else if ((playerPositionXDiff < 0) && ((Math.abs(playerPositionXDiff)) > (Math.abs(playerPositionYDiff)))) {
+    } else {
       playerSprite.className = 'walk left';
       this.direction = 'left';
     }
@@ -193,9 +208,28 @@ export default class PlayerActionsService extends Service {
       this.walkAnimationInProgress = false;
       window.clearInterval(this.manage3dnessInterval);
       this.currentlyPathfinding = false;
+      if (coordsFromObject) {
+        this.checkSpriteArrival(playerContainer, clickXPosition, clickYPosition);
+      } else {
+        this.hasArrived = false;
+      }
     }, timeToWalk);
 
     this.walkAnimationInProgress = true;
+  }
+
+  checkSpriteArrival(playerContainer, clickXPosition, clickYPosition) {
+    const top = parseInt(playerContainer.style.top, 10);
+    const left = parseInt(playerContainer.style.left, 10);;
+    const x = parseFloat(clickXPosition.toFixed(3));
+    const y = parseFloat(clickYPosition.toFixed(3));
+
+    // if the character's top and left values are within 10% of the desired x and y location
+    if (top > y * .9 && top < y * 1.1 && left > x * .9 && left < x * 1.1) {
+      this.hasArrived = true;
+    } else {
+      this.hasArrived = false;
+    }
   }
 
   teleport(e) {
