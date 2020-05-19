@@ -7,10 +7,13 @@ export default class TestAreaRoute extends Route {
         name: 'couch',
         isInteractive: true,
         isCollected: false,
-        canInteractWith: true,
+        hasInteractAction: false,
         interactionCoord: {
           pageY: 569,
           pageX: 730
+        },
+        action: {
+          comment: 'standing up',
         },
         lines: [
           {
@@ -20,14 +23,46 @@ export default class TestAreaRoute extends Route {
           }, {
             character: 'frank',
             mood: 'angry',
-            line: `THAT'S OBVIOUS, YOU PENIS!`
+            line: `IT'S OBVIOUS, YOU DAMN FOOL!`
           }
         ]
       }, {
         name: 'pillar',
         isInteractive: false,
         isCollected: false
-      }
+      }, {
+        name: 'banana',
+        canPickUp: true,
+        isInteractive: true,
+        isCollected: false,
+        hasInteractAction: true,
+        interactionCoord: {
+          pageY: 609,
+          pageX: 1030
+        },
+        action: {
+          comment: 'standing right',
+          interact: 'pickup'
+        },
+        lines: [
+          {
+            character: 'frank',
+            mood: 'regular',
+            line: `IT'S A BANANA`
+          }, {
+            character: 'frank',
+            mood: 'regular',
+            line: `IT LOOKS LONELY`
+          }
+        ],
+        interactiveLines: [
+          {
+            character: 'frank',
+            mood: 'regular',
+            line: `GIMME BANANA`
+          }
+        ]
+      },
     ];
     return {
       objects

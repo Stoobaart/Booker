@@ -183,18 +183,97 @@ body {
 
   .portrait {
     position: relative;
-    border: 1px solid black;
-    width: 25%;
+    width: 25.06vw;
     height: 50%;
+    margin-left: 2rem;
+    overflow: hidden;
+
+    &-image {
+      width: 375vw;
+      height: 100%;
+      image-rendering: pixelated;
+      filter: blur(0);
+      -webkit-filter: blur(0);
+      background-repeat: no-repeat;
+      animation: talk 2000ms steps(15) infinite;
+    }
   }
 
   .speach {
+    width: 50%;
     color: white;
     text-shadow: 2px 0 0 #000, 0 -2px 0 #000, 0 2px 0 #000, -2px 0 0 #000;
-    position: relative;
-    width: 50%;
-    height: 50%;
-    padding: 2rem;
+    padding: 4rem 2rem;
+  }
+}
+
+.inventory {
+  animation: fadeIn 1s;
+  -webkit-animation: fadeIn 1s;
+  display: flex;
+  position: absolute;
+  z-index: 10;
+  width: 4rem;
+  height: 3.75rem;
+  margin: 2%;
+
+  .icon {
+    position: absolute;
+    width: 100%;
+    image-rendering: pixelated;
+    filter: blur(0);
+    -webkit-filter: blur(0);
+    background-repeat: no-repeat;
+    filter: drop-shadow(-2px 3px 5px rgba(0, 0, 0, 1.5));
+    -webkit-filter: drop-shadow(-2px 3px 5px rgba(0, 0, 0, 1.5));
+  }
+
+  .items {
+    position: absolute;
+    margin-left: 4rem;
+    height: 100%;
+    width: 0;
+    background-color: #000000c9;
+
+    &.open {
+      display: flex;
+      flex-direction: row-reverse;
+      border: 2px solid grey;
+      border-right: 6px solid #361f00;
+      border-radius: 0 1px 1px 0;
+      border-left: none;
+      animation: expandRight .2s forwards;
+      -webkit-animation: expandRight .2s forwards;
+
+      .item {
+        height: 2.7rem;
+        width: 3.5rem;
+        image-rendering: pixelated;
+        filter: blur(0);
+        -webkit-filter: blur(0);
+        padding: .5rem;
+      }
+    }
+
+    &.close {
+      border: 2px solid grey;
+      border-right: 2px solid #361f00;
+      border-radius: 0 1px 1px 0;
+      border-left: none;
+      width: 20rem;
+      animation: retractLeft 1s forwards;
+      -webkit-animation: retractLeft 1s forwards;
+
+      .item {
+        display: none;
+      }
+    }
+  }
+}
+
+@keyframes talk {
+  100% {
+    transform: translateX(-375vw);
   }
 }
 
@@ -219,5 +298,21 @@ body {
 @keyframes slideRight {
   100% {
     left: 120%;
+  }
+}
+
+@keyframes expandRight {
+  100% {
+    min-width: 5rem;
+  }
+}
+
+@keyframes retractLeft {
+  0%, 99% {
+    width: 0;
+  }
+  100% {
+    width: 0;
+    border: none;
   }
 }

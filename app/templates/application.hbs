@@ -30,8 +30,21 @@
   <div id="game-container" class="game-container">
     {{#if this.talkActions.showTalkOverlay}}
       <div class="talk-overlay" {{on "click" this.talkActions.runNextStep}}>
-        <div class="portrait {{this.talkActions.portrait}}">{{this.talkActions.portrait}} {{this.talkActions.mood}}</div>
+        <div class="portrait {{this.talkActions.portrait}}">
+          <img id="portrait-sprite" class="portrait-image" src="/assets/portraits/portrait-{{this.talkActions.portrait}}-{{this.talkActions.mood}}.png" alt="">
+        </div>
         <div class="speach">{{this.talkActions.speach}}</div>
+      </div>
+    {{else}}
+      <div class="inventory" {{on "click" this.inventory.toggle}} {{on-click-outside (fn this.inventory.close)}}>
+        <img class="icon" src="/assets/icons/wood-inventory-icon.png" alt="">
+        <div class="items {{if this.inventory.isOpen "open" "close"}}">
+          {{#each this.inventory.items as |object|}}
+            <div>
+             <img class="item" src="/assets/objects/{{object.name}}.png" alt="">
+            </div>
+          {{/each}}
+        </div>
       </div>
     {{/if}}
     {{outlet}}

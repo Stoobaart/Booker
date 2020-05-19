@@ -5,9 +5,9 @@ import { later } from '@ember/runloop';
 import { inject as service } from '@ember/service';
 
 export default class ObjectComponent extends Component {
-
   @service moveActions;
   @service talkActions;
+  @service inventory;
 
   @tracked isClicked = false;
 
@@ -41,6 +41,7 @@ export default class ObjectComponent extends Component {
     this.moveActions.walk(this.object.interactionCoord, { coordsFromObject: true });
     const checkIfArrived = () => {
       if (this.moveActions.hasArrived) {
+        this.moveActions.action(this.object.action.comment);
         this.clearInterval();
         return this.talkActions.setLinesAndSpeak(this.object.lines);
       }
@@ -54,6 +55,25 @@ export default class ObjectComponent extends Component {
 
   @action
   interactWith() {
+    this.moveActions.walk(this.object.interactionCoord, { coordsFromObject: true });
+    const checkIfArrived = () => {
+      if (this.moveActions.hasArrived) {
+        this.moveActions.action(this.object.action.interact);
+        this.clearInterval();
+        this.talkActions.setLinesAndSpeak(this.object.interactiveLines);
+        if (this.object.canPickUp) {
+          later(() => {
+            const objectContainer = document.getElementById(this.object.name);
+            objectContainer.style.display = 'none';
+            this.inventory.addItem(this.object);
+          }, 500);
+          
+        }
+      }
+    };
+    if (!this.checkIfArrivedInterval) {
+      this.checkIfArrivedInterval = window.setInterval(checkIfArrived, 1000);
+    }
     this.isClicked = false;
   }
 }

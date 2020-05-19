@@ -27,17 +27,29 @@ export default class TalkActionsService extends Service {
     this.mood = this.lines[this.lineNumber].mood;
     this.numberOfLines = this.lines.length - 1;
     const charactersInLine = this.lines[this.lineNumber].line.length;
-    
+
+    const portraitSprite = document.getElementById('portrait-sprite');
+
+    if (portraitSprite) {
+      portraitSprite.style.animation = 'talk 2000ms steps(15) infinite';
+    }
+
     const typeWriter = () => {
-      this.letterCount++;
-      this.addALetter([...this.lines[this.lineNumber].line ]);
+      if (this.letterCount < this.lines[this.lineNumber].line.length) {
+        this.letterCount++;
+        this.addALetter([...this.lines[this.lineNumber].line ]);
+      }
     };
 
-    const timePerLetter = 50;
+    const timePerLetter = 100;
     this.typeWriterInterval = window.setInterval(typeWriter, timePerLetter);
-    const timeToType = charactersInLine * timePerLetter;
+    const timeToType = charactersInLine * timePerLetter + 200;
 
     later(() => {
+      const portraitSprite = document.getElementById('portrait-sprite');
+      if (portraitSprite) {
+        portraitSprite.style.animation = 'none';
+      }
       window.clearInterval(this.typeWriterInterval);
       this.typeWriterInterval = null;
       this.letterCount = 0;

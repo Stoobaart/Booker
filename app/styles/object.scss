@@ -1,4 +1,8 @@
 .object {
+  image-rendering: pixelated;
+  filter: blur(0);
+  -webkit-filter: blur(0);
+  background-repeat: no-repeat;
   z-index: 2;
 
   &.container {

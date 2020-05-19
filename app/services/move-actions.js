@@ -13,6 +13,11 @@ export default class moveActionsService extends Service {
   manage3DnessInterval = null;
   manage3dnessInterval = null;
 
+  action(action) {
+    const playerSprite = document.getElementById('player-sprite');
+    playerSprite.className = `${action}`;
+  }
+
   setSpriteScale() {
     const walkArea = document.getElementById('walk-area');
     const screenArea = document.getElementById('game-container');
@@ -123,9 +128,9 @@ export default class moveActionsService extends Service {
   adjustedScaleSpriteHeight(clickYPosition) {
     const walkArea = document.getElementById('walk-area');
     if (walkArea.offsetHeight < 268) {
-      return clickYPosition < 304 ? 210 : 244;
+      return clickYPosition < 304 ? 230 : 244;
     } else {
-      return clickYPosition < 640 ? 274 : 314;
+      return clickYPosition < 640 ? 274 : 294;
     }
   }
 
@@ -151,7 +156,7 @@ export default class moveActionsService extends Service {
     
     // click position to use when clicking directly on the screen, 
     // center sprite X and adjust Y for sprite changing size when scaling for perspective
-    let clickXPosition = e.pageX - 50;
+    let clickXPosition = e.pageX - 90;
     let clickYPosition = e.pageY - this.adjustedScaleSpriteHeight(e.pageY);
 
     // If walking due to an object interaction, ensure the passed value is made proportional for different screen sizes
