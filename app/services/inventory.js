@@ -11,6 +11,8 @@ export default class InventoryService extends Service {
   toggle() {
     const open = document.getElementById('drawer-open');
     const close = document.getElementById('drawer-close');
+    open.volume = 0.8;
+    close.volume = 0.2;
     this.isOpen = !this.isOpen;
     if (this.isOpen) {
       const drawer = document.getElementsByClassName('items');

@@ -1,0 +1,11 @@
+.game-container > .background > .scene {
+  &.street {
+    top: 12%;
+    left: -15%;
+  }
+
+  &.street-car {
+    top: 6%;
+    left: -15%;
+  }
+}

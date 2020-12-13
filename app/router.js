@@ -9,4 +9,5 @@ export default class Router extends EmberRouter {
 Router.map(function() {
   this.route('beginnings');
   this.route('test-area');
+  this.route('the-bottom');
 });

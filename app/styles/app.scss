@@ -6,6 +6,7 @@
 @import 'walk-area';
 @import 'test-area';
 @import 'object';
+@import 'the-bottom';
 
 * {
   user-select: none;
@@ -35,7 +36,7 @@ body {
 }
 
 .public-service-announcement {
-  &_conatiner {
+  &_container {
     position: relative;
     top: 40%;
     width: 42rem;
@@ -80,6 +81,7 @@ body {
 }
 
 .dick {
+  image-rendering: pixelated;
   position: relative;
   width: 7rem;
   left: -2rem;
@@ -246,6 +248,7 @@ body {
       -webkit-animation: expandRight .2s forwards;
 
       .item {
+        display: inline-block;
         height: 2.7rem;
         width: 3.5rem;
         image-rendering: pixelated;

@@ -16,6 +16,12 @@ export default class ApplicationController extends Controller {
   // SET TO TRUE WHILE DEVELOPING TO SKIP START SCREEN
   @tracked gameStarted = true;
 
+  constructor() {
+    super(...arguments);
+    // COMMENT OUT WHILE DEVELOPING TO STOP REDIRECT TO START PAGE
+    // this.router.transitionTo('/');
+  }
+
   @action
   enterGame() {
     this.gameEntered = true;

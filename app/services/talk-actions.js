@@ -4,6 +4,7 @@ import { later } from '@ember/runloop';
 import { action } from '@ember/object';
 
 export default class TalkActionsService extends Service {
+  @tracked sceneSequenceTracker = 0;
 
   @tracked showTalkOverlay = false;
   @tracked speach = '';
@@ -83,6 +84,8 @@ export default class TalkActionsService extends Service {
       this.lineNumber = 0;
       this.typeWriterInterval = null;
       this.showTalkOverlay = false;
+
+      this.sceneSequenceTracker++;
     }
   }
 
